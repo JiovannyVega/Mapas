@@ -17,6 +17,26 @@ export default function App() {
     longitude: -98.983326
   })
 
+  const [markers, setMarkers] = useState([]);
+
+  const addMarkers = () => {
+    if (!currentLocation) {
+      alert('Current location is not available');
+      return;
+    }
+
+    const { latitude, longitude } = currentLocation;
+    const offset = 0.0005; // puedes ajustar este valor según tus necesidades
+
+    const newMarkers = [
+      { latitude: latitude + offset, longitude: longitude + offset },
+      { latitude: latitude - offset, longitude: longitude + offset },
+      { latitude: latitude - offset, longitude: longitude - offset },
+      { latitude: latitude + offset, longitude: longitude - offset },
+    ];
+    setMarkers(newMarkers);
+  }
+
   const polygonCoordinates = [
     { latitude: 22.718482, longitude: -99.007534 },
     { latitude: 22.718487, longitude: -99.005292 },
@@ -45,8 +65,8 @@ export default function App() {
     const current = {
       latitude: location.coords.latitude,
       longitude: location.coords.longitude,
-      latitudeDelta: 0.0922,
-      longitudeDelta: 0.0421,
+      latitudeDelta: 0.00922,
+      longitudeDelta: 0.00421,
     }
 
     // Animate the map to the current location
@@ -62,8 +82,9 @@ export default function App() {
         initialRegion={{
           latitude: origin.latitude,
           longitude: origin.longitude,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
+          latitudeDelta: 0.00922,
+          longitudeDelta: 0.00421,
+          zoom: 50
         }}
         mapType='hybrid'
       >
@@ -73,15 +94,36 @@ export default function App() {
             pinColor="blue"
           />
         )}
+        {markers.map((marker, index) => (
+          <Marker
+            key={index}
+            coordinate={marker}
+            draggable
+            onDragEnd={(e) => {
+              const newMarkers = [...markers];
+              newMarkers[index] = e.nativeEvent.coordinate;
+              setMarkers(newMarkers);
+            }}
+          />
+        ))}
         <Polygon
           coordinates={polygonCoordinates}
           strokeColor="#FFFF00"
           strokeWidth={2}
           fillColor="rgba(0, 128, 0, 0.5)"
         />
+        {markers.length > 0 && (
+          <Polygon
+            coordinates={markers}
+            strokeColor="#FFFF00"
+            strokeWidth={2}
+            fillColor="rgba(0, 128, 0, 0.5)"
+          />
+        )}
       </MapView>
       <View style={styles.buttonContainer}>
         <Button title="Get Location" onPress={getLocationPermission} />
+        <Button title="Add" onPress={addMarkers} />
       </View>
     </View>
   );
