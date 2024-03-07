@@ -1,7 +1,7 @@
-import * as React from 'react';
+import React, { useRef, useState } from 'react';
 import * as Location from 'expo-location';
 import { StyleSheet, Button, View } from 'react-native';
-import MapView, { Marker, Polyline } from 'react-native-maps';
+import MapView, { Marker, Polygon } from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
 import { GOOGLE_MAPS_API_KEY } from '@env';
 
@@ -17,9 +17,21 @@ export default function App() {
     longitude: -98.983326
   })
 
+  const polygonCoordinates = [
+    { latitude: 22.718482, longitude: -99.007534 },
+    { latitude: 22.718487, longitude: -99.005292 },
+    { latitude: 22.715913, longitude: -99.005362 },
+    { latitude: 22.715917, longitude: -99.007279 },
+    { latitude: 22.717423, longitude: -99.007225 },
+    { latitude: 22.717465, longitude: -99.007527 },
+
+  ];
+
   React.useEffect(() => {
     getLocationPermission();
   }, [])
+
+  const [currentLocation, setCurrentLocation] = useState(null);
 
   const mapRef = React.useRef();
 
@@ -38,6 +50,7 @@ export default function App() {
     }
 
     // Animate the map to the current location
+    setCurrentLocation(current);
     mapRef.current.animateToRegion(current, 500); // 500ms animation duration
   }
 
@@ -54,28 +67,18 @@ export default function App() {
         }}
         mapType='hybrid'
       >
-        <Marker
-          draggable
-          coordinate={origin}
-          onDragEnd={(direction) => setOrigin(direction.nativeEvent.coordinate)}
+        {currentLocation && (
+          <Marker
+            coordinate={currentLocation}
+            pinColor="blue"
+          />
+        )}
+        <Polygon
+          coordinates={polygonCoordinates}
+          strokeColor="#FFFF00"
+          strokeWidth={2}
+          fillColor="rgba(0, 128, 0, 0.5)"
         />
-        <Marker
-          draggable
-          coordinate={destination}
-          onDragEnd={(direction) => setDestination(direction.nativeEvent.coordinate)}
-        />
-        <MapViewDirections
-          origin={origin}
-          destination={destination}
-          apikey={GOOGLE_MAPS_API_KEY}
-          strokeColor='blue'
-          strokeWidth={3}
-        />
-        {/* <Polyline
-          coordinates={[origin, destination]}
-          strokeColor='red'
-          strokeWidth={3}
-        /> */}
       </MapView>
       <View style={styles.buttonContainer}>
         <Button title="Get Location" onPress={getLocationPermission} />
