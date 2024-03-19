@@ -149,13 +149,25 @@ export default function App() {
           />
         )}
       </MapView>
+
       <View style={styles.buttonContainer}>
-        <Button title="Get Location" onPress={getLocationPermission} />
-        <Button title="Add" onPress={addMarkers} />
+        <View style={styles.buttonWrapper}>
+          <Button title="Get Location" onPress={getLocationPermission} />
+        </View>
+        <View style={styles.buttonWrapper}>
+          <Button title="Add" onPress={addMarkers} disabled={hasAdded} />
+        </View>
         {hasAdded && (
           <>
-            <Button title="Add Point" onPress={addMarker} disabled={markers.length >= 10} />
-            <Button title="Remove Point" onPress={removeMarker} disabled={markers.length <= 3} />
+            <View style={styles.buttonWrapper}>
+              <Button title="Add Point" onPress={addMarker} disabled={markers.length >= 10} />
+            </View>
+            <View style={styles.buttonWrapper}>
+              <Button title="Remove Point" onPress={removeMarker} disabled={markers.length <= 3} />
+            </View>
+            <View style={styles.buttonWrapper}>
+              <Button title="Guardar" />
+            </View>
           </>
         )}
       </View>
@@ -175,9 +187,17 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   buttonContainer: {
-    position: 'absolute',
-    bottom: 20,
-    left: 20,
-    right: 20,
+    position: 'absolute', // Posiciona el contenedor de los botones de manera absoluta
+    bottom: 50, // Coloca el contenedor de los botones 50 píxeles por encima del borde inferior de la pantalla
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    margin: 20,
+    flexWrap: 'wrap',
+  },
+  buttonWrapper: {
+    flex: 1,
+    margin: 10,
+    minWidth: '40%', // Asegura que cada botón tenga al menos el 40% del ancho de la pantalla
   },
 });
