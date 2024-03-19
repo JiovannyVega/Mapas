@@ -1,21 +1,30 @@
 {
   "expo": {
-    "name": "Maps-Sample",
-    "slug": "Maps-Sample",
+    "name": "PruebaMapa",
+    "slug": "PruebaMapa",
     "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
     "assetBundlePatterns": [
       "**/*"
     ],
-    "extra": {
-      "eas": {
-        "projectId": "5bca22b1-622a-4a0a-a4f7-afa0bd2bb10c"
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
       }
     },
-    "runtimeVersion": "1.0.0",
-    "updates": {
-      "url": "https://u.expo.dev/5bca22b1-622a-4a0a-a4f7-afa0bd2bb10c"
-    },
-    "android": {},
-    "ios": {}
+    "web": {
+      "favicon": "./assets/favicon.png"
+    }
   }
 }
